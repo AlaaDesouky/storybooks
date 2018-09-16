@@ -9,10 +9,13 @@
   "author": "Alaa Desouky",
   "license": "MIT",
   "dependencies": {
+    "body-parser": "^1.18.3",
     "cookie-parser": "^1.4.3",
     "express": "^4.16.3",
     "express-handlebars": "^3.0.0",
     "express-session": "^1.15.6",
+    "method-override": "^3.0.0",
+    "moment": "^2.22.2",
     "mongoose": "^5.2.14",
     "passport": "^0.4.0",
     "passport-google-oauth20": "^1.0.0"

@@ -15,3 +15,15 @@ main {
 footer {
   margin-top: 20px;
 }
+
+.story-text {
+  height: 120px;
+}
+
+.dash-status {
+  text-transform: capitalize;
+}
+
+#delete-form {
+  display: inline;
+}
