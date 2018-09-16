@@ -31,7 +31,7 @@ const StorySchema = new Schema({
       },
       commentUser: {
         type: Schema.Types.ObjectId,
-        ref: "users"
+        ref: "user"
       }
     }
   ],
