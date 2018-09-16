@@ -22,13 +22,20 @@ router.get("/add", ensureAuthenticated, (req, res) => {
 
 // Edit Story Form
 router.get("/edit/:id", ensureAuthenticated, (req, res) => {
-  Story.findOne({ _id: req.params.id }).then(story => {
-    if (story.user != req.user.id) {
-      res.redirect("/stories");
-    } else {
-      res.render("stories/edit", { story: story });
-    }
-  });
+  Story.findOne({ _id: req.params.id })
+    .then(story => {
+      if (story.user != req.user.id) {
+        res.redirect("/stories");
+      } else {
+        res.render("stories/edit", { story: story });
+      }
+    })
+    .catch((err, story) => {
+      if (err || !story) {
+        req.flash("error_msg", "Story not found");
+        res.redirect("/dashboard");
+      }
+    });
 });
 
 // Show single story
@@ -55,6 +62,7 @@ router.get("/show/:id", (req, res) => {
     })
     .catch((err, story) => {
       if (err || !story) {
+        req.flash("error_msg", "Story not found");
         res.redirect("/stories");
       }
     });
@@ -67,6 +75,12 @@ router.get("/user/:userId", (req, res) => {
     .sort({ date: "desc" })
     .then(stories => {
       res.render("stories/index", { stories: stories });
+    })
+    .catch((err, user) => {
+      if (err || !user) {
+        req.flash("error_msg", "User not found");
+        res.redirect("/stories");
+      }
     });
 });
 
@@ -105,7 +119,7 @@ router.post("/", (req, res) => {
 });
 
 // Edit Form Process
-router.put("/:id", (req, res) => {
+router.put("/:id", ensureAuthenticated, (req, res) => {
   Story.findOne({
     _id: req.params.id
   }).then(story => {
@@ -128,16 +142,18 @@ router.put("/:id", (req, res) => {
 });
 
 // Delete Story
-router.delete("/:id", (req, res) => {
-  Story.remove({
+router.delete("/:id", ensureAuthenticated, (req, res) => {
+  Story.deleteOne({
     _id: req.params.id
   }).then(() => {
     res.redirect("/dashboard");
   });
 });
 
+//------------------------ Comments Routes ------------------------//
+
 // Add Comment route
-router.post("/comments/:id", (req, res) => {
+router.post("/comments/:id", ensureAuthenticated, (req, res) => {
   Story.findOne({ _id: req.params.id }).then(story => {
     const newComment = {
       commentBody: req.body.commentBody,

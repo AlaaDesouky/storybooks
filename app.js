@@ -3,6 +3,7 @@ const path = require("path");
 const exphbs = require("express-handlebars");
 const bodyParser = require("body-parser");
 const methodOverride = require("method-override");
+const flash = require("connect-flash");
 const mongoose = require("mongoose");
 const cookieParser = require("cookie-parser");
 const session = require("express-session");
@@ -36,7 +37,10 @@ const {
 mongoose.Promise = global.Promise;
 // Mongoose Connect
 mongoose
-  .connect(keys.mongoURI)
+  .connect(
+    keys.mongoURI,
+    { useNewUrlParser: true }
+  )
   .then(() => console.log("MongoDB Connected..."))
   .catch(err => console.log(err));
 
@@ -79,8 +83,13 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 
+// Connect Flash Config
+app.use(flash());
+
 // Set global vars
 app.use((req, res, next) => {
+  res.locals.success_msg = req.flash("success_msg");
+  res.locals.error_msg = req.flash("error_msg");
   res.locals.user = req.user || null;
   next();
 });
