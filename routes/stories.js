@@ -136,7 +136,7 @@ router.put("/:id", ensureAuthenticated, (req, res) => {
     story.allowComments = allowComments;
 
     story.save().then(story => {
-      res.redirect("/dashboard");
+      res.redirect(`/stories/show/${story.id}`);
     });
   });
 });
